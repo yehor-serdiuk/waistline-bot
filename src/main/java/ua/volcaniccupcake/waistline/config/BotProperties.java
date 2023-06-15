@@ -12,4 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class BotProperties {
     private String username;
     private String token;
+    private Long adminId;
+    private Integer messageCharacterLimit;
 }

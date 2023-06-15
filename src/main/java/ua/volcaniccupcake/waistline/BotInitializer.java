@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class BotInitializer {
-    private final TelegramBot bot;
+    private final Bot bot;
     private final BotService botService;
     private final UpdateProcessor updateProcessor;
 
