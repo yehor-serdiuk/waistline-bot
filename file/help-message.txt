@@ -6,8 +6,8 @@
 /removeitem
 
 /listtypes
-/type_{id}
 
+/getconfig
 /setenergyratio
 /setmuscleratio
 /setmealsize

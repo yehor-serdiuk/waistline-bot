@@ -27,19 +27,19 @@ public class DataLoader implements CommandLineRunner {
                 .build());
 
         configRepository.save(Config.builder()
-                .mealSize(500)
+                .mealCalories(500)
                 .energyRatio(2)
-                .muscleRatio(2)
+                .muscleRatio(3)
                 .build());
 
         itemRepository.save(Item.builder()
                 .name("pasta")
-                .calories(123)
+                .calories(123.0)
                 .energyType(energyTypeEnergy)
                 .build());
         itemRepository.save(Item.builder()
                 .name("steak")
-                .calories(456)
+                .calories(456.0)
                 .energyType(energyTypeMuscle)
                 .build());
     }

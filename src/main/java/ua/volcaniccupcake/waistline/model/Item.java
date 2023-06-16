@@ -16,19 +16,19 @@ public class Item {
 
     private String name;
 
-    private Integer calories;
+    private Double calories;
 
     @Builder.Default
-    private Integer size = 100;
+    private Double size = 100.0;
 
     @Builder.Default
-    private Integer fat = 0;
+    private Double fat = 0.0;
 
     @Builder.Default
-    private Integer carbs = 0;
+    private Double carbs = 0.0;
 
     @Builder.Default
-    private Integer proteins = 0;
+    private Double proteins = 0.0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ENERGY_TYPE_ID")

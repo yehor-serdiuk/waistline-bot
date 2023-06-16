@@ -18,5 +18,5 @@ public class Config {
     private Integer id;
     private Integer energyRatio;
     private Integer muscleRatio;
-    private Integer mealSize;
+    private Integer mealCalories;
 }
