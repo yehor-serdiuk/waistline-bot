@@ -141,33 +141,37 @@ public class BotService {
             item.setCalories(1.0);
 
             if (item.getEnergyType().getName().equals("energy")) {
+                log.debug("adding item to the energyItemList: " + item);
                 energyItemList.add(item);
             } else if (item.getEnergyType().getName().equals("muscle")) {
+                log.debug("adding item to the muscleItemList: " + item);
                 muscleItemList.add(item);
             }
         }
 
         Config config = configRepository.findAll().iterator().next();
         double coefficient = (double) config.getMealCalories() / (config.getEnergyRatio() + config.getMuscleRatio());
+        log.debug("Coefficient: " + coefficient);
         double energyCalories = coefficient * config.getEnergyRatio();
         double muscleCalories = coefficient * config.getMuscleRatio();
+        log.debug("Muscle calories: " + muscleCalories);
+        log.debug("Energy calories: " + energyCalories);
+
+        double caloriesPerEnergyItem;
+        double caloriesPerMuscleItem;
         if (energyItemList.isEmpty()) {
-            muscleCalories = (double) config.getMealCalories() / muscleItemList.size();
-        }
-        if (muscleItemList.isEmpty()) {
-            energyCalories = (double) config.getMealCalories() / energyItemList.size();
-        }
-
-        double caloriesPerEnergyItem = 0;
-        if (!energyItemList.isEmpty()) {
+            caloriesPerEnergyItem = 0;
+            caloriesPerMuscleItem = (double) config.getMealCalories() / muscleItemList.size();
+        } else if(muscleItemList.isEmpty()) {
+            caloriesPerEnergyItem = (double) config.getMealCalories() / energyItemList.size();
+            caloriesPerMuscleItem = 0;
+        } else {
             caloriesPerEnergyItem = energyCalories / energyItemList.size();
-        }
-
-        double caloriesPerMuscleItem = 0;
-        if (!muscleItemList.isEmpty()) {
             caloriesPerMuscleItem = muscleCalories / muscleItemList.size();
         }
 
+        log.debug("caloriesPerEnergyItem: " + caloriesPerEnergyItem);
+        log.debug("caloriesPerMuscleItem: " + caloriesPerMuscleItem);
         List<Item> transformedItems = new ArrayList<>();
         for (Item energyItem : energyItemList) {
             energyItem.setCalories(energyItem.getCalories() * caloriesPerEnergyItem);
@@ -185,6 +189,7 @@ public class BotService {
             muscleItem.setProteins(muscleItem.getProteins() * caloriesPerMuscleItem);
             transformedItems.add(muscleItem);
         }
+
         sessionManager.setSessionType(null);
         return ItemMapper.itemListToMessageList(transformedItems);
     }
