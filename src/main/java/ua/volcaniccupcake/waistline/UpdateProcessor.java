@@ -96,6 +96,8 @@ public class UpdateProcessor {
                     sendMessage(messageChatId, "Invalid syntax: not a number");
                 } catch (ItemNotFoundException e) {
                     sendMessage(messageChatId, e.getMessage());
+                } catch (IndexOutOfBoundsException | IllegalArgumentException e) {
+                    sendMessage(messageChatId, "Invalid syntax");
                 }
             }
         } else if (messageText.equals("/setenergyratio")) {

@@ -129,8 +129,21 @@ public class BotService {
         itemRepository.deleteById(itemId);
     }
 
-    public List<String> calculate(String input) {
-        List<Item> itemList = mapItems(input);
+    public List<String> calculate(String input) throws IndexOutOfBoundsException, IllegalArgumentException {
+        Config config = configRepository.findAll().iterator().next();
+        List<String> inputLines = stringToLines(input);
+        List<Item> itemList;
+        double mealCalories;
+
+        if (inputLines.get(0).equalsIgnoreCase("s")) {
+        // Custom meal calories
+            mealCalories = Double.parseDouble(inputLines.get(1));
+            itemList = mapItems(inputLines.subList(2, inputLines.size())); // Remove first 2 lines
+        } else {
+        // Default meal calories
+            mealCalories = config.getMealCalories();
+            itemList = mapItems(inputLines);
+        }
         List<Item> energyItemList = new ArrayList<>();
         List<Item> muscleItemList = new ArrayList<>();
         for (Item item : itemList) {
@@ -149,8 +162,7 @@ public class BotService {
             }
         }
 
-        Config config = configRepository.findAll().iterator().next();
-        double coefficient = (double) config.getMealCalories() / (config.getEnergyRatio() + config.getMuscleRatio());
+        double coefficient = mealCalories / (config.getEnergyRatio() + config.getMuscleRatio());
         log.debug("Coefficient: " + coefficient);
         double energyCalories = coefficient * config.getEnergyRatio();
         double muscleCalories = coefficient * config.getMuscleRatio();
@@ -161,9 +173,9 @@ public class BotService {
         double caloriesPerMuscleItem;
         if (energyItemList.isEmpty()) {
             caloriesPerEnergyItem = 0;
-            caloriesPerMuscleItem = (double) config.getMealCalories() / muscleItemList.size();
+            caloriesPerMuscleItem = mealCalories / muscleItemList.size();
         } else if(muscleItemList.isEmpty()) {
-            caloriesPerEnergyItem = (double) config.getMealCalories() / energyItemList.size();
+            caloriesPerEnergyItem = mealCalories / energyItemList.size();
             caloriesPerMuscleItem = 0;
         } else {
             caloriesPerEnergyItem = energyCalories / energyItemList.size();
@@ -193,11 +205,18 @@ public class BotService {
         sessionManager.setSessionType(null);
         return ItemMapper.itemListToMessageList(transformedItems);
     }
-    private List<Item> mapItems(String input) throws NumberFormatException, ItemNotFoundException{
-        List<Integer> idList = new ArrayList<>();
-        Scanner scanner = new Scanner(input);
+    private List<String> stringToLines(String string) {
+        List<String> lines = new ArrayList<>();
+        Scanner scanner = new Scanner(string);
         while (scanner.hasNextLine()) {
-            idList.add(Integer.parseInt(scanner.nextLine()));
+            lines.add(scanner.nextLine());
+        }
+        return lines;
+    }
+    private List<Item> mapItems(List<String> inputLines) throws NumberFormatException, ItemNotFoundException{
+        List<Integer> idList = new ArrayList<>();
+        for (String line : inputLines) {
+            idList.add(Integer.parseInt(line));
         }
 
         List<Item> itemList = new ArrayList<>();

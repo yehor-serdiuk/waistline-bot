@@ -1,6 +1,5 @@
 package ua.volcaniccupcake.waistline.config;
 
-import com.pengrad.telegrambot.TelegramBot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

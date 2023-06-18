@@ -1,7 +1,6 @@
 package ua.volcaniccupcake.waistline.mapper;
 
 import ua.volcaniccupcake.waistline.model.EnergyType;
-import ua.volcaniccupcake.waistline.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
