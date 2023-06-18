@@ -1,16 +1,16 @@
-/calculate (proportions of types and ids)
-/search
+/search - search
+/calculate - calculate calories
 
-/listitems
-/additem
-/removeitem
+/listitems - list all items
+/additem - add a new item
+/removeitem - remove an item
 
-/listtypes
+/listtypes - list types of food
 
-/getconfig
-/setenergyratio
-/setmuscleratio
-/setmealsize
+/getconfig - show configuration
+/setenergyratio - set energy ratio
+/setmuscleratio - set muscle ratio
+/setmealsize - set meal size
 
-/start
-/help
+/start - start
+/help - help
