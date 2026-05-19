@@ -14,5 +14,5 @@ public class ItemDTO {
     private Double fat;
     private Double carbs;
     private Double proteins;
-    private Integer energyTypeId;
+    private String energyTypeName;
 }

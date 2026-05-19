@@ -111,8 +111,8 @@ public class ItemMapper {
                 + "\n";
     }
     public Item itemDTOToItem(ItemDTO itemDTO) {
-        EnergyType energyType = energyTypeRepository.findById(itemDTO.getEnergyTypeId())
-                .orElseThrow(() -> new EnergyTypeNotFoundException("Energy type with id " + itemDTO.getEnergyTypeId() + " not found"));
+        EnergyType energyType = energyTypeRepository.findByNameIgnoreCase(itemDTO.getEnergyTypeName())
+                .orElseThrow(() -> new EnergyTypeNotFoundException("Energy type with name " + itemDTO.getEnergyTypeName() + " not found"));
         return Item.builder()
                 .name(itemDTO.getName())
                 .calories(itemDTO.getCalories())

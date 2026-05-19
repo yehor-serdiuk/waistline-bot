@@ -17,6 +17,7 @@ import ua.volcaniccupcake.waistline.exception.EnergyTypeNotFoundException;
 import ua.volcaniccupcake.waistline.exception.MessageCharacterLimitExceededException;
 import ua.volcaniccupcake.waistline.service.BotService;
 import ua.volcaniccupcake.waistline.session.SessionType;
+import ua.volcaniccupcake.waistline.util.StringUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,7 @@ public class UpdateProcessor {
     private final SessionManager sessionManager;
     private final ConfigRepository configRepository;
     private final ObjectMapper objectMapper =  new ObjectMapper();
+    private final StringUtil stringUtil;
 
 
     @SneakyThrows
@@ -82,6 +84,8 @@ public class UpdateProcessor {
                     sendMessage(messageChatId, "Invalid syntax");
                 } catch (EnergyTypeNotFoundException e) {
                     sendMessage(messageChatId, e.getMessage());
+                } catch (Exception e) {
+                    sendMessage(messageChatId, "Error, try again!");
                 }
             } else if (sessionManager.getSessionType() == SessionType.SEARCH) {
                 try {
@@ -111,15 +115,23 @@ public class UpdateProcessor {
             sendMessage(messageChatId, "Send me the new meal size.\n\n/cancel - cancel operation");
         } else if (messageText.equals("/additem")) {
             sessionManager.setSessionType(SessionType.ADD_ITEM);
-            String sampleItemJson = "{\n" +
-                    "   \"name\":\"name\",\n" +
-                    "   \"calories\":300,\n" +
-                    "   \"size\":100,\n" +
-                    "   \"fat\":5,\n" +
-                    "   \"carbs\":5,\n" +
-                    "   \"proteins\":5,\n" +
-                    "   \"energyTypeId\":1\n" +
-                    "}";
+            StringBuilder sampleItemJsonStringBuilder = new StringBuilder();
+            sampleItemJsonStringBuilder.append("Name: name");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Calories: 100");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Size: 100");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Fat: 100");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Carbs: 100");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Proteins: 100");
+            sampleItemJsonStringBuilder.append("\n");
+            sampleItemJsonStringBuilder.append("Energy Type Name: name");
+            String sampleItemJson = sampleItemJsonStringBuilder.toString();
+
+            sendMessage(messageChatId, "Please send me data about your item! Use the following message as a template!");
             sendMessage(messageChatId, sampleItemJson);
         } else if (messageText.equals("/search")) {
             sessionManager.setSessionType(SessionType.SEARCH);

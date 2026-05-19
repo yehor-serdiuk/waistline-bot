@@ -22,6 +22,7 @@ import ua.volcaniccupcake.waistline.repository.EnergyTypeRepository;
 import ua.volcaniccupcake.waistline.repository.ItemRepository;
 import ua.volcaniccupcake.waistline.mapper.ItemMapper;
 import ua.volcaniccupcake.waistline.session.SessionManager;
+import ua.volcaniccupcake.waistline.util.StringUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class BotService {
     private final ConfigRepository configRepository;
     private final SessionManager sessionManager;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final StringUtil stringUtil;
 
     public void confirmAllUpdates() {
         GetUpdatesResponse getUpdatesResponse = bot.execute(new GetUpdates());
@@ -114,7 +116,8 @@ public class BotService {
 
     public void addItem(String messageText) throws IOException {
         log.debug("Received json string: " + messageText);
-        ItemDTO itemDTO = objectMapper.readValue(messageText, ItemDTO.class);
+        String json = stringUtil.convertItemInputToJson(messageText);
+        ItemDTO itemDTO = objectMapper.readValue(json, ItemDTO.class);
         Item item = itemMapper.itemDTOToItem(itemDTO);
         itemRepository.save(item);
         sessionManager.setSessionType(null);
